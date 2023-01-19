@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "a4893791-d0aa-4386-87f8-9186a70dea0e",
+		"name": "BoredAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13759083"
+	},
+	"item": [
+		{
+			"name": "Load random activity",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Load activity",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/activities?key=6826029",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activities"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "6826029"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get activities",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Delete activity",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
