@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\Http;
 
 class ActivitiesRepository
 {
+    public static function getStoredActivity(?int $key): ?Activity
+    {
+        return Activity::query()->find(['key' => $key])->first();
+    }
+
     /**
      * Get activity
      *
      * keyId - key_id or null for random
      */
-    public static function getActivity(?int $key = null): ?Activity
+    public static function getRemoteActivity(?int $key = null): ?Activity
     {
         $boredUrl    = BoredApi::URL . 'api/activity/';
         $boredParams = $key ? ['key' => $key] : null;
@@ -22,8 +27,7 @@ class ActivitiesRepository
         $loadedJson  = Http::get($boredUrl, $boredParams)->json();
 
         if ($key = $loadedJson['key'] ?? null) {
-            /** @var ?Activity $activity */
-            $activity = Activity::query()->find(['key' => $key])->first() ?: new Activity();
+            $activity = self::getStoredActivity($key) ?: new Activity();
             foreach ($loadedJson as $propKey => $propValue) {
                 $activity->$propKey = $propValue;
             }

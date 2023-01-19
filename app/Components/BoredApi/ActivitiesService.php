@@ -8,7 +8,7 @@ class ActivitiesService
 {
     public static function loadActivity($keyId = null): ?Activity
     {
-        $activity = ActivitiesRepository::getActivity($keyId);
+        $activity = ActivitiesRepository::getRemoteActivity($keyId);
         if (!$activity) {
             return null;
         }

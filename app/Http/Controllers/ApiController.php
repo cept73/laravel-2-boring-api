@@ -64,7 +64,7 @@ class ApiController extends BaseController
      */
     public function getActivity(int $key): Response|JsonResponse
     {
-        $activity = ActivitiesRepository::getActivity($key);
+        $activity = ActivitiesRepository::getRemoteActivity($key);
         if ($activity === null) {
             return response()->noContent(404);
         }
@@ -80,7 +80,7 @@ class ApiController extends BaseController
      */
     public function deleteActivity(int $key): Response|JsonResponse
     {
-        $activity = Activity::query()->find(['key' => $key])->first();
+        $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
             return response()->json(['message' => 'Key not found'], 404);
         }
