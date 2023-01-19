@@ -11,7 +11,7 @@ class ActivitiesRepository
 {
     public static function getStoredActivity(?int $key): ?Activity
     {
-        return Activity::query()->find(['key' => $key])->first();
+        return Activity::query()->where(['key' => $key])->get()->first();
     }
 
     /**
