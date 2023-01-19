@@ -51,7 +51,7 @@ class ApiController extends BaseController
     {
         $activitiesRequest = new ActivitiesRequest();
         $activitiesRequest->populateFromArray(request()->all());
-        $activities = ActivitiesRepository::getActivitiesList($activitiesRequest);
+        $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
 
         return response()->json($activities);
     }

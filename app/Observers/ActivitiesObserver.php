@@ -18,7 +18,7 @@ class ActivitiesObserver
     {
         Log::warning('ACTIVITIES COUNT', [
             'keyChanged'    => $activity->key,
-            'overallCount'  => ActivitiesRepository::getActiveCount()
+            'overallCount'  => ActivitiesRepository::getStoredCount()
         ]);
     }
 

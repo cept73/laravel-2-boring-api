@@ -39,7 +39,7 @@ class ActivitiesRepository
         return null;
     }
 
-    public static function getActivitiesList(ActivitiesRequest $activitiesRequest): LengthAwarePaginator
+    public static function getStoredActivitiesList(ActivitiesRequest $activitiesRequest): LengthAwarePaginator
     {
         $where = [];
         foreach (Activity::FILTER_PROPERTIES as $filterKey => $dbProperty) {
@@ -56,7 +56,7 @@ class ActivitiesRepository
             ->paginate($activitiesRequest->onPage());
     }
 
-    public static function getActiveCount(): int
+    public static function getStoredCount(): int
     {
         return Activity::all()->count();
     }
