@@ -16,5 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/activities', [ApiController::class, 'loadActivities']);
 Route::get('/activities', [ApiController::class, 'getActivities']);
-Route::get('/activities/{id}', [ApiController::class, 'getActivity']);
-Route::delete('/activities/{id}', [ApiController::class, 'deleteActivity']);
+Route::get('/activities/{key}', [ApiController::class, 'getActivity']);
+Route::delete('/activities/{key}', [ApiController::class, 'deleteActivity']);

@@ -8,7 +8,7 @@ class ActivitiesRequest
 {
     public const DEFAULT_ON_PAGE_LIMIT = 10;
 
-    private static ?array $propertiesNames = null;
+    protected ?array $propertiesNames = null;
 
     public function __construct(
         private ?int $onPage        = null,
@@ -17,45 +17,35 @@ class ActivitiesRequest
         private ?string $type       = null,
     )
     {
-    }
-
-    public function propertiesNames(): array
-    {
-        if (self::$propertiesNames !== null) {
-            return self::$propertiesNames;
-        }
-
         $propertiesNames = [];
         $classProperties = (new ReflectionClass($this))->getProperties();
         foreach ($classProperties as $property) {
-            if ($property->isStatic()) {
+            if (!$property->isPrivate()) {
                 continue;
             }
             $propertiesNames[] = $property->getName();
         }
-        self::$propertiesNames = $propertiesNames;
 
-        return $propertiesNames;
+        $this->propertiesNames = $propertiesNames;
     }
 
     public function get($propertyName)
     {
-        if (in_array($propertyName, $this->propertiesNames())) {
-            return $this->$propertyName();
+        if (!in_array($propertyName, $this->propertiesNames)) {
+            return null;
         }
 
-        return null;
+        return $this->$propertyName();
     }
 
     public function populateFromArray($array): self
     {
-        $propertiesNames = $this->propertiesNames();
+        $propertiesNames = $this->propertiesNames;
 
         foreach ($propertiesNames as $key) {
-            if (($value = $array[$key] ?? null) !== null) {
-                $method = 'set' . ucfirst($key);
-                $this->$method($value);
-            }
+            $value  = $array[$key] ?? null;
+            $method = 'set' . ucfirst($key);
+            $this->$method($value);
         }
 
         return $this;
@@ -69,31 +59,32 @@ class ActivitiesRequest
     public function asArray(): array
     {
         $array = [];
-        foreach ($this->propertiesNames() as $property) {
+        foreach ($this->propertiesNames as $property) {
             $array[$property] = $this->$property();
         }
+
         return $array;
     }
 
-    public function setParticipant(int $participant): self
+    public function setParticipant(?int $participant): self
     {
         $this->participant = $participant;
         return $this;
     }
 
-    public function setPrice(float $price): self
+    public function setPrice(?float $price): self
     {
         $this->price = $price;
         return $this;
     }
 
-    public function setType(string $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
         return $this;
     }
 
-    public function setOnPage(int $onPage): self
+    public function setOnPage(?int $onPage): self
     {
         $this->onPage = $onPage;
         return $this;
