@@ -54,7 +54,6 @@ class ActivitiesRequest
         foreach ($propertiesNames as $key) {
             if (($value = $array[$key] ?? null) !== null) {
                 $method = 'set' . ucfirst($key);
-                print " $method = $value; ";
                 $this->$method($value);
             }
         }
