@@ -12,6 +12,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -50,7 +51,7 @@ class ApiController extends BaseController
     public function getActivities(): Response|JsonResponse
     {
         $activitiesRequest = new ActivitiesRequest();
-        $activitiesRequest->populateFromArray(request()->all());
+        $activitiesRequest->populateFromArray(Request::all());
         $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
 
         return response()->json($activities);
@@ -87,6 +88,6 @@ class ApiController extends BaseController
 
         $activity->delete();
 
-        return response()->json(['key' => $activity->getAttribute('key')]);
+        return response()->json(['key' => $activity->key]);
     }
 }
