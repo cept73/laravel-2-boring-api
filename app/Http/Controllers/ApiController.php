@@ -64,7 +64,7 @@ class ApiController extends BaseController
      */
     public function getActivity(int $key): Response|JsonResponse
     {
-        $activity = ActivitiesRepository::getRemoteActivity($key);
+        $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
             return response()->noContent(404);
         }
