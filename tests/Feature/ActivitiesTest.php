@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Helpers\UrlHelper;
 use App\Http\Controllers\Controller;
+use App\Observers\ActivitiesObserver;
 use Tests\TestCase;
 
 class ActivitiesTest extends TestCase
@@ -101,5 +102,14 @@ class ActivitiesTest extends TestCase
         $responseFailedDelete->assertJsonStructure(['message']);
 
         $this->post('/api/activities?key=' . self::KEY_SOME_ACTIVITY);
+    }
+
+    public function test_reaction_after_new_post_loaded()
+    {
+        tap($this->mock(ActivitiesObserver::class), function ($observer) {
+            $observer->expects('created')->andReturnNull();
+        });
+
+        $this->post('/api/activities');
     }
 }
