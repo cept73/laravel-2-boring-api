@@ -2,10 +2,10 @@
 
 namespace App\Components\BoredApi;
 
+use App\Interfaces\RemoteStorageInterface;
 use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Http;
 
 class ActivitiesRepository
 {
@@ -19,18 +19,13 @@ class ActivitiesRepository
      *
      * keyId - key_id or null for random
      */
-    public static function getRemoteActivity(?int $key = null): ?Activity
+    public static function getRemoteActivity(RemoteStorageInterface $remoteStorage, ?int $key = null): ?Activity
     {
-        $boredUrl    = BoredApi::URL . 'api/activity/';
-        $boredParams = $key ? ['key' => $key] : null;
-
-        $loadedJson  = Http::get($boredUrl, $boredParams)->json();
+        $loadedJson = $remoteStorage->load($key);
 
         if ($key = $loadedJson['key'] ?? null) {
             $activity = self::getStoredActivity($key) ?: new Activity();
-            foreach ($loadedJson as $propKey => $propValue) {
-                $activity->$propKey = $propValue;
-            }
+            $activity->populateFromJson($loadedJson);
             $activity->loaded_at = Carbon::now();
 
             return $activity;

@@ -8,7 +8,7 @@ class ActivitiesService
 {
     public static function loadActivity($keyId = null): ?Activity
     {
-        $activity = ActivitiesRepository::getRemoteActivity($keyId);
+        $activity = ActivitiesRepository::getRemoteActivity(new BoredApiRemoteStorage(), $keyId);
         if (!$activity) {
             return null;
         }

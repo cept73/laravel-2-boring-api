@@ -26,4 +26,11 @@ class Activity extends Model
     {
         return 'activities';
     }
+
+    public function populateFromJson($json)
+    {
+        foreach ($json as $propKey => $propValue) {
+            $this->$propKey = $propValue;
+        }
+    }
 }
