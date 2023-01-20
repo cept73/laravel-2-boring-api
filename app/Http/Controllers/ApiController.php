@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Components\BoredApi\ActivitiesRepository;
-use App\Components\BoredApi\ActivitiesRequest;
-use App\Components\BoredApi\ActivitiesService;
-use App\Components\BoredApi\BoredApiRemoteStorage;
-use App\Models\Activity;
+use App\Components\Activities\ActivitiesRepository;
+use App\Components\Activities\ActivitiesRequest;
+use App\Components\Activities\ActivitiesService;
+use App\Components\RemoteStorage\BoredApiRemoteStorage;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;

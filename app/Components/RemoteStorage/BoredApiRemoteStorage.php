@@ -1,8 +1,7 @@
 <?php /** @noinspection HttpUrlsUsage */
 
-namespace App\Components\BoredApi;
+namespace App\Components\RemoteStorage;
 
-use App\Interfaces\RemoteStorageInterface;
 use Illuminate\Support\Facades\Http;
 
 class BoredApiRemoteStorage implements RemoteStorageInterface

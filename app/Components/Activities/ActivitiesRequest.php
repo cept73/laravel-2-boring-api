@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUnused */
 
-namespace App\Components\BoredApi;
+namespace App\Components\Activities;
 
 use ReflectionClass;
 

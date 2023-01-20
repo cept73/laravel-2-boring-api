@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Components\BoredApi\ActivitiesRepository;
+use App\Components\Activities\ActivitiesRepository;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Log;
 

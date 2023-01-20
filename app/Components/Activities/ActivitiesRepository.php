@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Components\BoredApi;
+namespace App\Components\Activities;
 
-use App\Interfaces\RemoteStorageInterface;
+use App\Components\RemoteStorage\RemoteStorageInterface;
 use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
