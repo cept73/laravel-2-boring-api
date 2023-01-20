@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Helpers\UrlHelper;
+use App\Http\Controllers\Controller;
 use Tests\TestCase;
 
 class ActivitiesTest extends TestCase
@@ -19,7 +20,7 @@ class ActivitiesTest extends TestCase
         $response = $this->post('/api/activities');
         $responseKey = $response->json('key');
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertJsonStructure(['key']);
         $this->assertTrue((int)$responseKey == $responseKey);
     }
@@ -28,7 +29,7 @@ class ActivitiesTest extends TestCase
     {
         $response = $this->post('/api/activities?key=' . self::KEY_SOME_ACTIVITY);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertJson(['key' => self::KEY_SOME_ACTIVITY]);
     }
 
@@ -40,7 +41,7 @@ class ActivitiesTest extends TestCase
             'type'          => 'incorrect_data'
         ]));
 
-        $response->assertStatus(400);
+        $response->assertStatus(Controller::STATUS_WRONG_INPUT);
     }
 
     public function test_get_activities_correct_queries()

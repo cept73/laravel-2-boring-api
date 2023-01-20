@@ -11,21 +11,14 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
-class ApiController extends BaseController
+class ApiController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    public const STATUS_NOT_FOUND = 404;
-    public const STATUS_WRONG_INPUT = 400;
-
-    public const MESSAGE_KEY_NOT_FOUND = 'Key not found';
-    public const MESSAGE_WRONG_REQUEST = 'Wrong request';
 
     /**
      * Load activities from external service
