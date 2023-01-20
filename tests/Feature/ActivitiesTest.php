@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Components\RabbitMq\RabbitMqService;
 use App\Helpers\UrlHelper;
 use App\Http\Controllers\Controller;
 use App\Observers\ActivitiesObserver;
@@ -22,19 +23,14 @@ class ActivitiesTest extends TestCase
     public function test_load_random_activity(): void
     {
         $response = $this->post(self::URL_ACTIVITIES);
-        $responseKey = $response->json('key');
-
         $response->assertOk();
-        $response->assertJsonStructure(['key']);
-        $this->assertTrue((int)$responseKey == $responseKey);
     }
 
     public function test_load_some_activity(): void
     {
         $response = $this->post(self::URL_GET_SOME_ACTIVITY);
-
         $response->assertOk();
-        $response->assertJson(['key' => self::KEY_SOME_ACTIVITY]);
+        $response->assertJson(['sent' => true]);
     }
 
     public function test_get_activities_incorrect_query()
@@ -108,14 +104,5 @@ class ActivitiesTest extends TestCase
         $responseFailedDelete->assertJsonStructure(['message']);
 
         $this->post(self::URL_GET_SOME_ACTIVITY);
-    }
-
-    public function test_reaction_after_new_post_loaded()
-    {
-        tap($this->mock(ActivitiesObserver::class), function ($observer) {
-            $observer->expects('created')->andReturnNull();
-        });
-
-        $this->post(self::URL_ACTIVITIES);
     }
 }

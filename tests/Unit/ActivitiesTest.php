@@ -2,10 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Models\Activity;
 use PHPUnit\Framework\TestCase;
 
-class ExampleTest extends TestCase
+class ActivitiesTest extends TestCase
 {
     /**
      * A basic test example.
