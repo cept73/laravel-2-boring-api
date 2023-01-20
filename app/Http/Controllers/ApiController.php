@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Components\Activities\ActivitiesRepository;
 use App\Components\Activities\ActivitiesRequest;
-use App\Components\Activities\ActivitiesService;
-use App\Components\RemoteStorage\BoredApiRemoteStorage;
+use App\Components\RabbitMq\RabbitMqService;
+use App\Console\Commands\AppListener;
+use Bschmitt\Amqp\Exception\Configuration;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -28,6 +29,7 @@ class ApiController extends Controller
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws Configuration
      */
     public function loadActivities($key = null): Response|JsonResponse
     {
@@ -35,14 +37,12 @@ class ApiController extends Controller
             $key = request()->get('key', null);
         }
 
-        $activity = ActivitiesService::loadActivity(new BoredApiRemoteStorage(), $key);
-        if ($activity === null) {
-            return response()->noContent(self::STATUS_NOT_FOUND);
-        }
-
-        return response()->json([
-            'key' => $activity->key
+        RabbitMqService::sendMessage([
+            'action'    => AppListener::ACTION_FETCH_ACTIVITY,
+            'key'       => $key
         ]);
+
+        return response()->noContent(self::STATUS_OK);
     }
 
     /**

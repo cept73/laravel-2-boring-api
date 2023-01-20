@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 
+/** @noinspection SpellCheckingInspection */
 return [
 
     /*
@@ -185,6 +186,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Bschmitt\Amqp\AmqpServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -210,6 +212,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Amqp' => 'Bschmitt\Amqp\Facades\Amqp',
     ])->toArray(),
 
 ];

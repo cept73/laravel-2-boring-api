@@ -3,8 +3,10 @@
 namespace App\Observers;
 
 use App\Components\Activities\ActivitiesRepository;
+use App\Components\RabbitMq\RabbitMqService;
+use App\Console\Commands\AppListener;
 use App\Models\Activity;
-use Illuminate\Support\Facades\Log;
+use Bschmitt\Amqp\Exception\Configuration;
 
 class ActivitiesObserver
 {
@@ -13,12 +15,14 @@ class ActivitiesObserver
      *
      * @param Activity $activity
      * @return void
+     * @throws Configuration
+     * @noinspection PhpUnusedParameterInspection
      */
     private function actionOnChanges(Activity $activity): void
     {
-        Log::warning('ACTIVITIES COUNT', [
-            'keyChanged'    => $activity->key,
-            'overallCount'  => ActivitiesRepository::getStoredCount()
+        RabbitMqService::sendMessage([
+            'action'    => AppListener::ACTION_REPORT,
+            'count'     => ActivitiesRepository::getStoredCount()
         ]);
     }
 
@@ -27,6 +31,7 @@ class ActivitiesObserver
      *
      * @param Activity $activity
      * @return void
+     * @throws Configuration
      */
     public function created(Activity $activity):void
     {
@@ -38,6 +43,7 @@ class ActivitiesObserver
      *
      * @param Activity $activity
      * @return void
+     * @throws Configuration
      */
     public function updated(Activity $activity):void
     {
@@ -49,6 +55,7 @@ class ActivitiesObserver
      *
      * @param Activity $activity
      * @return void
+     * @throws Configuration
      */
     public function deleted(Activity $activity):void
     {
@@ -61,6 +68,7 @@ class ActivitiesObserver
      * @param Activity $activity
      * @return void
      * @noinspection PhpUnused
+     * @throws Configuration
      */
     public function restored(Activity $activity): void
     {
@@ -73,6 +81,7 @@ class ActivitiesObserver
      * @param Activity $activity
      * @return void
      * @noinspection PhpUnused
+     * @throws Configuration
      */
     public function forceDeleted(Activity $activity): void
     {
