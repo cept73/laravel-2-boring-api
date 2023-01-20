@@ -21,6 +21,9 @@ class ApiController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public const STATUS_NOT_FOUND = 404;
+    public const STATUS_WRONG_INPUT = 400;
+
     public const MESSAGE_KEY_NOT_FOUND = 'Key not found';
     public const MESSAGE_WRONG_REQUEST = 'Wrong request';
 
@@ -39,7 +42,7 @@ class ApiController extends BaseController
 
         $activity = ActivitiesService::loadActivity(new BoredApiRemoteStorage(), $keyId);
         if ($activity === null) {
-            return response()->noContent(404);
+            return response()->noContent(self::STATUS_NOT_FOUND);
         }
 
         return response()->json([
@@ -58,7 +61,7 @@ class ApiController extends BaseController
             $activitiesRequest = new ActivitiesRequest();
             $activitiesRequest->populateFromArray(Request::all());
         } catch (Throwable) {
-            return response()->json(['message' => self::MESSAGE_WRONG_REQUEST]);
+            return response()->json(['message' => self::MESSAGE_WRONG_REQUEST], self::STATUS_WRONG_INPUT);
         }
 
         $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
@@ -76,7 +79,7 @@ class ApiController extends BaseController
     {
         $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
-            return response()->noContent(404);
+            return response()->noContent(self::STATUS_NOT_FOUND);
         }
 
         return response()->json($activity);
@@ -92,7 +95,7 @@ class ApiController extends BaseController
     {
         $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
-            return response()->json(['message' => self::MESSAGE_KEY_NOT_FOUND], 404);
+            return response()->json(['message' => self::MESSAGE_KEY_NOT_FOUND], self::STATUS_NOT_FOUND);
         }
 
         $activity->delete();

@@ -17,10 +17,10 @@ class ActivitiesTest extends TestCase
     public function test_load_random_activity(): void
     {
         $response = $this->post('/api/activities');
+        $responseKey = $response->json('key');
 
         $response->assertStatus(200);
         $response->assertJsonStructure(['key']);
-        $responseKey = $response->json('key');
         $this->assertTrue((int)$responseKey == $responseKey);
     }
 
@@ -39,7 +39,8 @@ class ActivitiesTest extends TestCase
             'price'         => 'incorrect_data',
             'type'          => 'incorrect_data'
         ]));
-        $response->assertJsonStructure(['message']);
+
+        $response->assertStatus(400);
     }
 
     public function test_get_activities_correct_queries()
