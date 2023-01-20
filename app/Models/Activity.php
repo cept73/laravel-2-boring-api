@@ -33,4 +33,20 @@ class Activity extends Model
             $this->$propKey = $propValue;
         }
     }
+
+    public static function getWhereConditions($data): array
+    {
+        $where = [];
+
+        foreach (self::FILTER_PROPERTIES as $filterKey => $dbProperty) {
+            if (is_int($filterKey)) {
+                $filterKey = $dbProperty;
+            }
+            if ($filterValue = $data[$filterKey] ?? null) {
+                $where[$dbProperty] = $filterValue;
+            }
+        }
+
+        return $where;
+    }
 }

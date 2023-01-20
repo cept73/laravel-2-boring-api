@@ -23,31 +23,22 @@ class ActivitiesRepository
     {
         $loadedJson = $remoteStorage->load($key);
 
-        if ($key = $loadedJson['key'] ?? null) {
-            $activity = self::getStoredActivity($key) ?: new Activity();
-            $activity->populateFromJson($loadedJson);
-            $activity->loaded_at = Carbon::now();
-
-            return $activity;
+        $key = $loadedJson['key'] ?? null;
+        if (!$key) {
+            return null;
         }
 
-        return null;
+        $activity = self::getStoredActivity($key) ?: new Activity();
+        $activity->populateFromJson($loadedJson);
+        $activity->loaded_at = Carbon::now();
+
+        return $activity;
     }
 
     public static function getStoredActivitiesList(ActivitiesRequest $activitiesRequest): LengthAwarePaginator
     {
-        $where = [];
-        foreach (Activity::FILTER_PROPERTIES as $filterKey => $dbProperty) {
-            if (is_int($filterKey)) {
-                $filterKey = $dbProperty;
-            }
-            if ($filterValue = $activitiesRequest->get($filterKey)) {
-                $where[$dbProperty] = $filterValue;
-            }
-        }
-
         return Activity::query()
-            ->where($where)
+            ->where(Activity::getWhereConditions($activitiesRequest->asArray()))
             ->paginate($activitiesRequest->onPage());
     }
 
