@@ -88,7 +88,7 @@ class ApiController extends Controller
     {
         $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
-            return response()->json(['message' => self::MESSAGE_KEY_NOT_FOUND], self::STATUS_NOT_FOUND);
+            return response()->json(['message' => self::MESSAGE_ITEM_NOT_FOUND], self::STATUS_NOT_FOUND);
         }
 
         $activity->delete();
