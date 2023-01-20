@@ -47,7 +47,7 @@ class ActivitiesTest extends TestCase
 
     public function test_get_activities_correct_queries()
     {
-        $correctVariants = [
+        $correctCases = [
             [],
             ['participant'  => 1],
             ['price'        => 0.5],
@@ -85,7 +85,7 @@ class ActivitiesTest extends TestCase
             'total',
         ];
 
-        foreach ($correctVariants as $correctGetParams) {
+        foreach ($correctCases as $correctGetParams) {
             $response = $this->get(UrlHelper::getUrlWithParams('/api/activities', $correctGetParams));
             $response->assertJsonStructure($correctStructure);
         }
@@ -93,15 +93,19 @@ class ActivitiesTest extends TestCase
 
     public function test_delete_some_activity()
     {
-        $this->post('/api/activities?key=' . self::KEY_SOME_ACTIVITY);
+        $getSomeActivityUrl = '/api/activities?key=' . self::KEY_SOME_ACTIVITY;
+
+        $this->post($getSomeActivityUrl);
 
         $responseSuccessfulDelete = $this->delete('/api/activities/' . self::KEY_SOME_ACTIVITY);
+        $responseSuccessfulDelete->assertOk();
         $responseSuccessfulDelete->assertJson(['key' => self::KEY_SOME_ACTIVITY]);
 
         $responseFailedDelete = $this->delete('/api/activities/' . self::KEY_SOME_ACTIVITY);
+        $responseFailedDelete->assertNotFound();
         $responseFailedDelete->assertJsonStructure(['message']);
 
-        $this->post('/api/activities?key=' . self::KEY_SOME_ACTIVITY);
+        $this->post($getSomeActivityUrl);
     }
 
     public function test_reaction_after_new_post_loaded()
