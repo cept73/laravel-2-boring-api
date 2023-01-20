@@ -37,12 +37,12 @@ class ApiController extends Controller
             $key = request()->get('key', null);
         }
 
-        RabbitMqService::sendMessage([
-            'action'    => AppListener::ACTION_FETCH_ACTIVITY,
-            'key'       => $key
+        return response()->json([
+            'sent' => RabbitMqService::sendMessage([
+                'action'    => AppListener::ACTION_FETCH_ACTIVITY,
+                'key'       => $key
+            ])
         ]);
-
-        return response()->noContent(self::STATUS_OK);
     }
 
     /**

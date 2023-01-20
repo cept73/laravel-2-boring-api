@@ -7,6 +7,7 @@ use App\Components\Logger\LoggerTrait;
 use App\Components\PostponedActions\ActionInterface;
 use App\Components\PostponedActions\FetchActivitiesAction;
 use App\Components\PostponedActions\ReportAdminAction;
+use App\Components\RabbitMq\RabbitMqService;
 use Bschmitt\Amqp\Amqp;
 use Bschmitt\Amqp\Consumer;
 use Bschmitt\Amqp\Exception\Configuration;
@@ -67,7 +68,7 @@ class AppListener extends Command
     {
         $this->log($logger, 'Listening for messages...', Console::COLOR_GREEN);
 
-        $amqp->consume(env('AMQP_QUEUE'), function (AMQPMessage $message, Consumer $consumer) use ($logger) {
+        RabbitMqService::listen($amqp, function (AMQPMessage $message, Consumer $consumer) use ($logger) {
             try {
                 $data = json_decode($message->body, true);
                 $this->doActionManager($logger, $data);
@@ -78,9 +79,7 @@ class AppListener extends Command
                 $this->log($logger, 'Message error: ' . $throwable->getMessage(), Console::COLOR_RED);
                 $consumer->reject($message);
             }
-        }, [
-            'persistent' => true
-        ]);
+        });
 
         return self::SUCCESS;
     }
