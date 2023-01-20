@@ -15,10 +15,14 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 class ApiController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public const MESSAGE_KEY_NOT_FOUND = 'Key not found';
+    public const MESSAGE_WRONG_REQUEST = 'Wrong request';
 
     /**
      * Load activities from external service
@@ -50,8 +54,13 @@ class ApiController extends BaseController
      */
     public function getActivities(): Response|JsonResponse
     {
-        $activitiesRequest = new ActivitiesRequest();
-        $activitiesRequest->populateFromArray(Request::all());
+        try {
+            $activitiesRequest = new ActivitiesRequest();
+            $activitiesRequest->populateFromArray(Request::all());
+        } catch (Throwable) {
+            return response()->json(['message' => self::MESSAGE_WRONG_REQUEST]);
+        }
+
         $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
 
         return response()->json($activities);
@@ -83,7 +92,7 @@ class ApiController extends BaseController
     {
         $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
-            return response()->json(['message' => 'Key not found'], 404);
+            return response()->json(['message' => self::MESSAGE_KEY_NOT_FOUND], 404);
         }
 
         $activity->delete();
