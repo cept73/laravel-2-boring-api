@@ -9,7 +9,10 @@ use Tests\TestCase;
 
 class ActivitiesTest extends TestCase
 {
-    public const KEY_SOME_ACTIVITY = 6826029;
+    public const KEY_SOME_ACTIVITY      = 6826029;
+
+    public const URL_ACTIVITIES         = '/api/activities';
+    public const URL_GET_SOME_ACTIVITY  = '/api/activities/' . self::KEY_SOME_ACTIVITY;
 
     /**
      * Load random
@@ -18,7 +21,7 @@ class ActivitiesTest extends TestCase
      */
     public function test_load_random_activity(): void
     {
-        $response = $this->post('/api/activities');
+        $response = $this->post(self::URL_ACTIVITIES);
         $responseKey = $response->json('key');
 
         $response->assertOk();
@@ -28,7 +31,7 @@ class ActivitiesTest extends TestCase
 
     public function test_load_some_activity(): void
     {
-        $response = $this->post('/api/activities?key=' . self::KEY_SOME_ACTIVITY);
+        $response = $this->post(self::URL_GET_SOME_ACTIVITY);
 
         $response->assertOk();
         $response->assertJson(['key' => self::KEY_SOME_ACTIVITY]);
@@ -36,7 +39,7 @@ class ActivitiesTest extends TestCase
 
     public function test_get_activities_incorrect_query()
     {
-        $response = $this->get(UrlHelper::getUrlWithParams('/api/activities', [
+        $response = $this->get(UrlHelper::getUrlWithParams(self::URL_ACTIVITIES, [
             'participant'   => 'incorrect_data',
             'price'         => 'incorrect_data',
             'type'          => 'incorrect_data'
@@ -53,6 +56,7 @@ class ActivitiesTest extends TestCase
             ['price'        => 0.5],
             ['type'         => 'relaxation']
         ];
+
         $correctStructure = [
             'current_page',
             'data',
@@ -86,26 +90,24 @@ class ActivitiesTest extends TestCase
         ];
 
         foreach ($correctCases as $correctGetParams) {
-            $response = $this->get(UrlHelper::getUrlWithParams('/api/activities', $correctGetParams));
+            $response = $this->get(UrlHelper::getUrlWithParams(self::URL_ACTIVITIES, $correctGetParams));
             $response->assertJsonStructure($correctStructure);
         }
     }
 
     public function test_delete_some_activity()
     {
-        $getSomeActivityUrl = '/api/activities?key=' . self::KEY_SOME_ACTIVITY;
+        $this->post(self::URL_GET_SOME_ACTIVITY);
 
-        $this->post($getSomeActivityUrl);
-
-        $responseSuccessfulDelete = $this->delete('/api/activities/' . self::KEY_SOME_ACTIVITY);
+        $responseSuccessfulDelete = $this->delete(self::URL_GET_SOME_ACTIVITY);
         $responseSuccessfulDelete->assertOk();
         $responseSuccessfulDelete->assertJson(['key' => self::KEY_SOME_ACTIVITY]);
 
-        $responseFailedDelete = $this->delete('/api/activities/' . self::KEY_SOME_ACTIVITY);
+        $responseFailedDelete = $this->delete(self::URL_GET_SOME_ACTIVITY);
         $responseFailedDelete->assertNotFound();
         $responseFailedDelete->assertJsonStructure(['message']);
 
-        $this->post($getSomeActivityUrl);
+        $this->post(self::URL_GET_SOME_ACTIVITY);
     }
 
     public function test_reaction_after_new_post_loaded()
@@ -114,6 +116,6 @@ class ActivitiesTest extends TestCase
             $observer->expects('created')->andReturnNull();
         });
 
-        $this->post('/api/activities');
+        $this->post(self::URL_ACTIVITIES);
     }
 }

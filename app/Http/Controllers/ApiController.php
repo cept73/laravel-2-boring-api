@@ -29,11 +29,13 @@ class ApiController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function loadActivities(): Response|JsonResponse
+    public function loadActivities($key = null): Response|JsonResponse
     {
-        $keyId = request()->get('key', null);
+        if (empty($key)) {
+            $key = request()->get('key', null);
+        }
 
-        $activity = ActivitiesService::loadActivity(new BoredApiRemoteStorage(), $keyId);
+        $activity = ActivitiesService::loadActivity(new BoredApiRemoteStorage(), $key);
         if ($activity === null) {
             return response()->noContent(self::STATUS_NOT_FOUND);
         }
