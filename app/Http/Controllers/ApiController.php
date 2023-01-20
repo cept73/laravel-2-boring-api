@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Components\BoredApi\ActivitiesRepository;
 use App\Components\BoredApi\ActivitiesRequest;
 use App\Components\BoredApi\ActivitiesService;
+use App\Components\BoredApi\BoredApiRemoteStorage;
 use App\Models\Activity;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -33,7 +34,7 @@ class ApiController extends BaseController
     {
         $keyId = request()->get('key', null);
 
-        $activity = ActivitiesService::loadActivity($keyId);
+        $activity = ActivitiesService::loadActivity(new BoredApiRemoteStorage(), $keyId);
         if ($activity === null) {
             return response()->noContent(404);
         }
