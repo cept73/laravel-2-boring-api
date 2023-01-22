@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/activities/{key}',    [ApiController::class, 'loadActivities']);
-Route::post('/activities',          [ApiController::class, 'loadActivities']);
-Route::get('/activities/{key}',     [ApiController::class, 'getActivity']);
-Route::get('/activities',           [ApiController::class, 'getActivities']);
-Route::delete('/activities/{key}',  [ApiController::class, 'deleteActivity']);
+Route::prefix('/activities')->group(function () {
+    Route::post('/{key}',   [ApiController::class, 'loadActivities']);
+    Route::post('/',        [ApiController::class, 'loadActivities']);
+    Route::get('/{key}',    [ApiController::class, 'getActivity']);
+    Route::get('/',         [ApiController::class, 'getActivities']);
+    Route::delete('/{key}', [ApiController::class, 'deleteActivity']);
+});
