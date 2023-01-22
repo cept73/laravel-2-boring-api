@@ -25,13 +25,13 @@
 — Открывая начальную страницу, показывается 404 страница с кнопкой перехода на документацию Swagger
 ![image](https://user-images.githubusercontent.com/16501564/213931367-1f835b59-9437-4629-9a16-548053d7913b.png)
 
-— Документация Swagger генерируется автоматически на основании storage/api-docs/api.yaml:
+— Документация Swagger генерируется автоматически на основании `storage/api-docs/api.yaml`:
 ![image](https://user-images.githubusercontent.com/16501564/213931374-9a4c3707-6655-4dad-9669-9574a22caa82.png)
 Можно также импортировать готовый пример запросов в PostMan: `BoredAPI.postman_collection.json` в public
 
-— Используется RabbitMQ сервер, настраивается в .env. Отправка писем и уведомлений идет через его очередь, физически их отправляет слушатель (на сервере нужно установить rabbitmq-server, создать Exchange и Queue например activities.update с типом direct и соединить их, указать в env такой же: AMQP_QUEUE=activities.update)
+— Используется RabbitMQ сервер, настраивается в .env. Отправка писем и уведомлений идет через его очередь, физически их отправляет слушатель (на сервере нужно установить rabbitmq-server, создать Exchange и Queue например `activities.update` с типом direct и соединить их, указать в env такой же: `AMQP_QUEUE=activities.update`)
 
-— Слушатель запускается через CLI коммандой php artisan queue:listen-activities, с выводом активности
+— Слушатель запускается через CLI коммандой `php artisan queue:listen-activities`, с выводом активности
 ![image](https://user-images.githubusercontent.com/16501564/213787458-b77ad171-256c-4383-aa1f-70f508334869.png)
 
 — Есть автотесты, запускаются `php artisan test`
