@@ -22,12 +22,11 @@
 
 # Комментарии
 
-![image](https://user-images.githubusercontent.com/16501564/213742362-5a12849a-5d03-4259-a107-a4bbf166bfef.png)
+![image](https://user-images.githubusercontent.com/16501564/213787458-b77ad171-256c-4383-aa1f-70f508334869.png)
 
 - Можно импортировать готовый пример запросов в PostMan: `BoredAPI.postman_collection.json` в корневой папке проекта 
 - В BoredAPI возвращается `participants`, не `participant` 
 - `type` разнообразен и трех перечисленных мало, поэтому для простоты в миграции используется string вместо enum
-- Вместо отправки по почте, в этой версии добавляется в журнал
 - В Get Activities могут использоваться фильтры page, participant, price, type
 - Использует RabbitMQ сервер, настраивается в .env
 - На сервере нужно запустить php artisan queue:listen-activities, он обслуживает два запроса: отправку письма и обновление каталога
