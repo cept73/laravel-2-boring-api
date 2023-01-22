@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ActivitiesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('/activities')->group(function () {
-    Route::post('/{key}',   [ApiController::class, 'loadActivities']);
-    Route::post('/',        [ApiController::class, 'loadActivities']);
-    Route::get('/{key}',    [ApiController::class, 'getActivity']);
-    Route::get('/',         [ApiController::class, 'getActivities']);
-    Route::delete('/{key}', [ApiController::class, 'deleteActivity']);
-});
+Route::resources([
+    'activities' => ActivitiesController::class,
+]);

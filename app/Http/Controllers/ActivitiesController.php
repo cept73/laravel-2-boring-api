@@ -11,13 +11,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Request;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Illuminate\Support\Facades\Response;
 use Throwable;
 
-class ApiController extends Controller
+class ActivitiesController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -27,17 +25,13 @@ class ApiController extends Controller
      * If `key` specified - seek activity by key,
      * else - get random record
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws Configuration
      */
-    public function loadActivities($key = null): Response|JsonResponse
+    public function store(): JsonResponse
     {
-        if (empty($key)) {
-            $key = request()->get('key', null);
-        }
+        $key = Request::get('key');
 
-        return response()->json([
+        return Response::json([
             'sent' => RabbitMqService::sendMessage([
                 'action'    => AppListener::ACTION_FETCH_ACTIVITY,
                 'key'       => $key
@@ -50,34 +44,34 @@ class ApiController extends Controller
      *
      * @return JsonResponse|Response
      */
-    public function getActivities(): Response|JsonResponse
+    public function index(): Response|JsonResponse
     {
         try {
             $activitiesRequest = new ActivitiesRequest();
             $activitiesRequest->populateFromArray(Request::all());
         } catch (Throwable) {
-            return response()->json(['message' => self::MESSAGE_WRONG_REQUEST], self::STATUS_WRONG_INPUT);
+            return Response::json(['message' => self::MESSAGE_WRONG_REQUEST], self::STATUS_WRONG_INPUT);
         }
 
         $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
 
-        return response()->json($activities);
+        return Response::json($activities);
     }
 
     /**
      * Get one activity, using specified key
      *
      * @param int $key
-     * @return Response|JsonResponse
+     * @return JsonResponse
      */
-    public function getActivity(int $key): Response|JsonResponse
+    public function show(int $key): JsonResponse
     {
         $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
-            return response()->noContent(self::STATUS_NOT_FOUND);
+            return Response::json(['message' => self::MESSAGE_ITEM_NOT_FOUND], self::STATUS_NOT_FOUND);
         }
 
-        return response()->json($activity);
+        return Response::json($activity);
     }
 
     /**
@@ -86,15 +80,15 @@ class ApiController extends Controller
      * @param int $key
      * @return Response|JsonResponse
      */
-    public function deleteActivity(int $key): Response|JsonResponse
+    public function destroy(int $key): Response|JsonResponse
     {
         $activity = ActivitiesRepository::getStoredActivity($key);
         if ($activity === null) {
-            return response()->json(['message' => self::MESSAGE_ITEM_NOT_FOUND], self::STATUS_NOT_FOUND);
+            return Response::json(['message' => self::MESSAGE_ITEM_NOT_FOUND], self::STATUS_NOT_FOUND);
         }
 
         $activity->delete();
 
-        return response()->json(['key' => $activity->key]);
+        return Response::json(['key' => $activity->key]);
     }
 }

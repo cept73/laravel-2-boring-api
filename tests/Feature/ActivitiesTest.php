@@ -2,10 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Components\RabbitMq\RabbitMqService;
 use App\Helpers\UrlHelper;
 use App\Http\Controllers\Controller;
-use App\Observers\ActivitiesObserver;
 use Tests\TestCase;
 
 class ActivitiesTest extends TestCase
@@ -13,7 +11,8 @@ class ActivitiesTest extends TestCase
     public const KEY_SOME_ACTIVITY      = 6826029;
 
     public const URL_ACTIVITIES         = '/api/activities';
-    public const URL_GET_SOME_ACTIVITY  = '/api/activities/' . self::KEY_SOME_ACTIVITY;
+    public const URL_SOME_ACTIVITY      = '/api/activities?key=' . self::KEY_SOME_ACTIVITY;
+    public const URL_SOME_ACTIVITY_PATH = '/api/activities/' . self::KEY_SOME_ACTIVITY;
 
     /**
      * Load random
@@ -28,7 +27,7 @@ class ActivitiesTest extends TestCase
 
     public function test_load_some_activity(): void
     {
-        $response = $this->post(self::URL_GET_SOME_ACTIVITY);
+        $response = $this->post(self::URL_SOME_ACTIVITY);
         $response->assertOk();
         $response->assertJson(['sent' => true]);
     }
@@ -93,16 +92,19 @@ class ActivitiesTest extends TestCase
 
     public function test_delete_some_activity()
     {
-        $this->post(self::URL_GET_SOME_ACTIVITY);
+        $this->post(self::URL_SOME_ACTIVITY);
 
-        $responseSuccessfulDelete = $this->delete(self::URL_GET_SOME_ACTIVITY);
+        sleep(3);
+
+        $responseSuccessfulDelete = $this->delete(self::URL_SOME_ACTIVITY_PATH);
+        print self::URL_SOME_ACTIVITY_PATH;
         $responseSuccessfulDelete->assertOk();
         $responseSuccessfulDelete->assertJson(['key' => self::KEY_SOME_ACTIVITY]);
 
-        $responseFailedDelete = $this->delete(self::URL_GET_SOME_ACTIVITY);
+        $responseFailedDelete = $this->delete(self::URL_SOME_ACTIVITY_PATH);
         $responseFailedDelete->assertNotFound();
         $responseFailedDelete->assertJsonStructure(['message']);
 
-        $this->post(self::URL_GET_SOME_ACTIVITY);
+        $this->post(self::URL_SOME_ACTIVITY);
     }
 }
