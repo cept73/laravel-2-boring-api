@@ -44,6 +44,6 @@ class ActivitiesRepository
 
     public static function getStoredCount(): int
     {
-        return Activity::all()->count();
+        return Activity::query()->count();
     }
 }
