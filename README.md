@@ -29,7 +29,7 @@
 — Документация Swagger генерируется автоматически на основании `storage/api-docs/api.yaml`:
 
 ![image](https://user-images.githubusercontent.com/16501564/213931374-9a4c3707-6655-4dad-9669-9574a22caa82.png)
-Можно также импортировать готовый пример запросов в PostMan: `BoredAPI.postman_collection.json` в public
+Можно также импортировать готовый пример запросов в PostMan: `public/BoredAPI.postman_collection.json`
 
 — Используется RabbitMQ сервер, настраивается в .env. Отправка писем и уведомлений идет через его очередь, физически их отправляет слушатель (на сервере нужно установить rabbitmq-server, создать Exchange и Queue например `activities.update` с типом direct и соединить их, указать в env такой же: `AMQP_QUEUE=activities.update`)
 
