@@ -9,6 +9,7 @@
         "ext-amqp": "*",
         "ext-dom": "*",
         "bschmitt/laravel-amqp": "^2.1",
+        "darkaonline/l5-swagger": "^8.4",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",

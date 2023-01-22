@@ -1,0 +1,379 @@
+openapi: 3.0.0
+info:
+  title: BoringAPI Documentation
+  description: API for pet project documentation
+  version: 0.2.0
+servers:
+  - url: http://localhost:8000/api
+    description: local server
+  - url: https://some-domain.com/api
+    description: production server
+paths:
+  /api/activities/:
+    get:
+      summary: Get list of activities from database
+      tags:
+        - Activity
+      parameters:
+        - name: onPage
+          description: Results on page
+          required: false
+          example: 10
+          in: path
+          schema:
+            type: integer
+            nullable: true
+        - name: participant
+          description: Participant id to filter
+          required: false
+          example: 1
+          in: path
+          schema:
+            type: integer
+            nullable: true
+        - name: price
+          description: Price to filter
+          required: false
+          example: 0.05
+          in: path
+          schema:
+            type: number
+            nullable: true
+        - name: type
+          description: Type
+          required: false
+          example: relaxation
+          in: path
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: List of activities
+          content:
+            application/json:
+              example: {
+                "current_page": 1,
+                "data": [
+                  {
+                    "id": 3,
+                    "key": 9714586,
+                    "participants": 1,
+                    "price": 0,
+                    "type": "busywork",
+                    "activity": "Organize a cluttered drawer",
+                    "link": "",
+                    "accessibility": 0,
+                    "loaded_at": "2023-01-20 05:40:30",
+                    "created_at": "2023-01-19T11:37:47.000000Z",
+                    "updated_at": "2023-01-20T05:40:30.000000Z"
+                  },
+                  {
+                    "id": 4,
+                    "key": 8238918,
+                    "participants": 1,
+                    "price": 0,
+                    "type": "social",
+                    "activity": "Visit your past teachers",
+                    "link": "",
+                    "accessibility": 0.7,
+                    "loaded_at": "2023-01-19 11:37:55",
+                    "created_at": "2023-01-19T11:37:55.000000Z",
+                    "updated_at": "2023-01-19T11:37:55.000000Z"
+                  },
+                  {
+                    "id": 5,
+                    "key": 6197243,
+                    "participants": 1,
+                    "price": 0,
+                    "type": "busywork",
+                    "activity": "Rearrange and organize your room",
+                    "link": "",
+                    "accessibility": 0.15,
+                    "loaded_at": "2023-01-20 05:03:55",
+                    "created_at": "2023-01-19T11:41:15.000000Z",
+                    "updated_at": "2023-01-20T05:03:55.000000Z"
+                  }
+                ],
+                "first_page_url": "http://localhost:8000/api/activities?page=1",
+                "from": 1,
+                "last_page": 26,
+                "last_page_url": "http://localhost:8000/api/activities?page=26",
+                "links": [
+                  {
+                    "url": null,
+                    "label": "&laquo; Previous",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=1",
+                    "label": "1",
+                    "active": true
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=2",
+                    "label": "2",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=3",
+                    "label": "3",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=4",
+                    "label": "4",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=5",
+                    "label": "5",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=6",
+                    "label": "6",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=7",
+                    "label": "7",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=8",
+                    "label": "8",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=9",
+                    "label": "9",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=10",
+                    "label": "10",
+                    "active": false
+                  },
+                  {
+                    "url": null,
+                    "label": "...",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=25",
+                    "label": "25",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=26",
+                    "label": "26",
+                    "active": false
+                  },
+                  {
+                    "url": "http://localhost:8000/api/activities?page=2",
+                    "label": "Next &raquo;",
+                    "active": false
+                  }
+                ],
+                "next_page_url": "http://localhost:8000/api/activities?page=2",
+                "path": "http://localhost:8000/api/activities",
+                "per_page": 3,
+                "prev_page_url": null,
+                "to": 3,
+                "total": 78
+              }
+              schema:
+                type: array
+                properties:
+                  current_page:
+                    type: integer
+                    default: 1
+                  data:
+                    type: array
+                    items:
+                      properties:
+                        type:
+                          type: array
+                        items:
+                          type: array
+                          properties:
+                            id:
+                              type: integer
+                            key:
+                              type: integer
+                            participants:
+                              type: integer
+                            price:
+                              type: number
+                            type:
+                              type: string
+                            activity:
+                              type: string
+                            link:
+                              type: string
+                            accessibility:
+                              type: integer
+                            loaded_at:
+                              type: string
+                            created_at:
+                              type: string
+                            updated_at:
+                              type: string
+                  first_page_url:
+                    type: string
+                  from:
+                    type: integer
+                  last_page:
+                    type: integer
+                  last_page_url:
+                    type: string
+                  links:
+                    type: array
+                    properties:
+                      url:
+                        type: string
+                        nullable: true
+                        example: http://localhost:8000/api/activities?page=2
+                      label:
+                        type: string
+                        example: Next &raquo;
+                      active:
+                        type: boolean
+                        example: false
+                  next_page_url:
+                    type: string
+                    nullable: true
+                    example: http://localhost:8000/api/activities?page=2
+                  path:
+                    type: string
+                    example: http://localhost:8000/api/activities
+                  per_page:
+                    type: integer
+                    default: 10
+                  prev_page_url:
+                    type: string
+                    nullable: true
+                    example: null
+                  to:
+                    type: integer
+                    default: 10
+                  total:
+                    type: integer
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              example: { message: 'Wrong parameters' }
+              schema:
+                type: array
+                properties:
+                  message:
+                    type: string
+  /api/activities/{key}:
+    get:
+      summary: Get activity from database
+      tags:
+        - Activity
+      parameters:
+        - name: key
+          in: path
+          description: Seek activity by key
+          required: true
+          example: 102345
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: One local stored activity properties
+          content:
+            application/json:
+              example: {
+                "id": 146,
+                "key": 6826029,
+                "participants": 1,
+                "price": 0,
+                "type": "education",
+                "activity": "Start a webinar on a topic of your choice",
+                "link": "",
+                "accessibility": 0.9,
+                "loaded_at": "2023-01-20 16:17:09",
+                "created_at": "2023-01-20T16:17:08.000000Z",
+                "updated_at": "2023-01-20T16:17:09.000000Z"
+              }
+              schema:
+                type: array
+                properties:
+                  id:
+                    type: integer
+                  key:
+                    type: integer
+                  participants:
+                    type: integer
+                  price:
+                    type: number
+                  type:
+                    type: string
+                  activity:
+                    type: string
+                  link:
+                    type: string
+                  accessibility:
+                    type: integer
+                  loaded_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+        '404':
+          description: Activity not found
+    post:
+      summary: Load activity from external service
+      tags:
+        - Activity
+      parameters:
+        - name: key
+          in: path
+          description: If specified - seek activity by key, else - get random record
+          required: false
+          example: 102345
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Is it add to queue successfully
+          content:
+            application/json:
+              example: {sent: true}
+              schema:
+                type: array
+                properties:
+                  sent:
+                    type: boolean
+                    nullable: true
+    delete:
+      summary: Delete activity from database
+      tags:
+        - Activity
+      parameters:
+        - name: key
+          in: path
+          description: Delete activity by key
+          required: true
+          example: 102345
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted activity key
+          content:
+            application/json:
+              example: {key: 102345}
+              schema:
+                type: array
+                properties:
+                  key:
+                    type: integer
+        '404':
+          description: Activity not found

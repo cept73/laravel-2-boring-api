@@ -49,10 +49,31 @@
 			"response": []
 		},
 		{
-			"name": "Delete activity",
+			"name": "Get activity",
 			"request": {
 				"method": "GET",
 				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Delete activity",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/activities/6826029",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activities",
+						"6826029"
+					]
+				}
 			},
 			"response": []
 		}
