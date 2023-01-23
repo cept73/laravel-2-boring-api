@@ -11,8 +11,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Throwable;
 
 class ActivitiesController extends Controller
@@ -27,14 +29,12 @@ class ActivitiesController extends Controller
      *
      * @throws Configuration
      */
-    public function store(): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        $key = Request::get('key');
-
         return Response::json([
             'sent' => RabbitMqService::sendMessage([
                 'action'    => AppListener::ACTION_FETCH_ACTIVITY,
-                'key'       => $key
+                'key'       => $request->get('key')
             ])
         ]);
     }
@@ -42,20 +42,20 @@ class ActivitiesController extends Controller
     /**
      * Get list of activities from database
      *
+     * @param Request $request
      * @return JsonResponse|Response
      */
-    public function index(): Response|JsonResponse
+    public function index(Request $request): Response|JsonResponse
     {
         try {
             $activitiesRequest = new ActivitiesRequest();
-            $activitiesRequest->populateFromArray(Request::all());
+            $activitiesRequest->populateFromArray($request->toArray());
+            $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
+
+            return Response::json($activities);
         } catch (Throwable) {
-            return Response::json(['message' => self::MESSAGE_WRONG_REQUEST], self::STATUS_WRONG_INPUT);
+            return Response::json(['message' => self::MESSAGE_WRONG_REQUEST], HttpResponse::HTTP_BAD_REQUEST);
         }
-
-        $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
-
-        return Response::json($activities);
     }
 
     /**
@@ -66,12 +66,15 @@ class ActivitiesController extends Controller
      */
     public function show(int $key): JsonResponse
     {
-        $activity = ActivitiesRepository::getStoredActivity($key);
-        if ($activity === null) {
-            return Response::json(['message' => self::MESSAGE_ITEM_NOT_FOUND], self::STATUS_NOT_FOUND);
+        try {
+            return Response::json(ActivitiesRepository::getStoredActivityOrFail($key));
         }
-
-        return Response::json($activity);
+        catch (NotFoundResourceException) {
+            return $this->itemNotFoundResponse();
+        }
+        catch (Throwable $exception) {
+            return $this->serverError($exception);
+        }
     }
 
     /**
@@ -82,13 +85,27 @@ class ActivitiesController extends Controller
      */
     public function destroy(int $key): Response|JsonResponse
     {
-        $activity = ActivitiesRepository::getStoredActivity($key);
-        if ($activity === null) {
-            return Response::json(['message' => self::MESSAGE_ITEM_NOT_FOUND], self::STATUS_NOT_FOUND);
+        try {
+            $activity = ActivitiesRepository::getStoredActivityOrFail($key);
+            $activity->delete();
+
+            return Response::json(['key' => $activity->key]);
         }
+        catch (NotFoundResourceException) {
+            return $this->itemNotFoundResponse();
+        }
+        catch (Throwable $exception) {
+            return $this->serverError($exception);
+        }
+    }
 
-        $activity->delete();
+    private function itemNotFoundResponse(): JsonResponse
+    {
+        return Response::json(['message' => self::MESSAGE_ITEM_NOT_FOUND], HttpResponse::HTTP_NOT_FOUND);
+    }
 
-        return Response::json(['key' => $activity->key]);
+    private function serverError(Throwable $exception): JsonResponse
+    {
+        return Response::json(['message' => $exception->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Helpers\UrlHelper;
-use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Tests\TestCase;
 
 class ActivitiesTest extends TestCase
@@ -40,7 +40,7 @@ class ActivitiesTest extends TestCase
             'type'          => 'incorrect_data'
         ]));
 
-        $response->assertStatus(Controller::STATUS_WRONG_INPUT);
+        $response->assertStatus(HttpResponse::HTTP_BAD_REQUEST);
     }
 
     public function test_get_activities_correct_queries()
@@ -94,10 +94,9 @@ class ActivitiesTest extends TestCase
     {
         $this->post(self::URL_SOME_ACTIVITY);
 
-        sleep(3);
+        sleep(2);
 
         $responseSuccessfulDelete = $this->delete(self::URL_SOME_ACTIVITY_PATH);
-        print self::URL_SOME_ACTIVITY_PATH;
         $responseSuccessfulDelete->assertOk();
         $responseSuccessfulDelete->assertJson(['key' => self::KEY_SOME_ACTIVITY]);
 

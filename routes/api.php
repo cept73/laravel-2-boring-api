@@ -14,6 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resources([
-    'activities' => ActivitiesController::class,
-]);
+Route::resource('activities', ActivitiesController::class);
