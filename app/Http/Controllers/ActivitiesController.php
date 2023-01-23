@@ -6,6 +6,7 @@ use App\Components\Activities\ActivitiesRepository;
 use App\Components\Activities\ActivitiesRequest;
 use App\Components\RabbitMq\RabbitMqService;
 use App\Console\Commands\AppListener;
+use App\Models\Activity;
 use Bschmitt\Amqp\Exception\Configuration;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -13,7 +14,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Throwable;
 
 class ActivitiesController extends Controller
@@ -60,41 +60,24 @@ class ActivitiesController extends Controller
     /**
      * Get one activity, using specified key
      *
-     * @param int $key
+     * @param Activity $activity
      * @return JsonResponse
      */
-    public function show(int $key): JsonResponse
+    public function show(Activity $activity): JsonResponse
     {
-        try {
-            return Response::json(ActivitiesRepository::getStoredActivityOrFail($key));
-        }
-        catch (NotFoundResourceException) {
-            return $this->itemNotFoundResponse();
-        }
-        catch (Throwable $exception) {
-            return $this->serverErrorResponse($exception);
-        }
+        return Response::json($activity);
     }
 
     /**
      * Delete activity from database
      *
-     * @param int $key
+     * @param Activity $activity
      * @return Response|JsonResponse
      */
-    public function destroy(int $key): Response|JsonResponse
+    public function destroy(Activity $activity): Response|JsonResponse
     {
-        try {
-            $activity = ActivitiesRepository::getStoredActivityOrFail($key);
-            $activity->delete();
+        $activity->delete();
 
-            return Response::json(['key' => $activity->key]);
-        }
-        catch (NotFoundResourceException) {
-            return $this->itemNotFoundResponse();
-        }
-        catch (Throwable $exception) {
-            return $this->serverErrorResponse($exception);
-        }
+        return Response::json(['key' => $activity->key]);
     }
 }

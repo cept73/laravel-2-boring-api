@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('activities', ActivitiesController::class);
+Route::resource('activities', ActivitiesController::class)->scoped(['activity' => 'key']);
