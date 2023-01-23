@@ -53,7 +53,7 @@ class ActivitiesController extends Controller
 
             return Response::json($activities);
         } catch (Throwable) {
-            return $this->wrongRequest();
+            return $this->wrongRequestResponse();
         }
     }
 
@@ -72,7 +72,7 @@ class ActivitiesController extends Controller
             return $this->itemNotFoundResponse();
         }
         catch (Throwable $exception) {
-            return $this->serverError($exception);
+            return $this->serverErrorResponse($exception);
         }
     }
 
@@ -94,7 +94,7 @@ class ActivitiesController extends Controller
             return $this->itemNotFoundResponse();
         }
         catch (Throwable $exception) {
-            return $this->serverError($exception);
+            return $this->serverErrorResponse($exception);
         }
     }
 }
