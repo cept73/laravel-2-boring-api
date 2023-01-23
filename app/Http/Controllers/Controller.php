@@ -15,16 +15,21 @@ abstract class Controller extends BaseController
 
     protected function itemNotFoundResponse(): JsonResponse
     {
-        return Response::json(['message' => self::MESSAGE_ITEM_NOT_FOUND], HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    protected function serverErrorResponse(Throwable $exception): JsonResponse
-    {
-        return Response::json(['message' => $exception->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->jsonResponse(self::MESSAGE_ITEM_NOT_FOUND, HttpResponse::HTTP_NOT_FOUND);
     }
 
     protected function wrongRequestResponse(): JsonResponse
     {
-        return Response::json(['message' => self::MESSAGE_WRONG_REQUEST], HttpResponse::HTTP_BAD_REQUEST);
+        return $this->jsonResponse(self::MESSAGE_WRONG_REQUEST, HttpResponse::HTTP_BAD_REQUEST);
+    }
+
+    protected function serverErrorResponse(Throwable $exception): JsonResponse
+    {
+        return $this->jsonResponse($exception->getMessage(), HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    protected function jsonResponse($message, $code): JsonResponse
+    {
+        return Response::json(['message' => $message], $code);
     }
 }
