@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Components\Activities\ActivitiesRepository;
-use App\Components\Activities\ActivitiesRequest;
 use App\Components\RabbitMq\RabbitMqService;
 use App\Console\Commands\AppListener;
 use App\Models\Activity;
+use App\Models\ActivitySearch;
 use Bschmitt\Amqp\Exception\Configuration;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -47,13 +47,16 @@ class ActivitiesController extends Controller
     public function index(Request $request): Response|JsonResponse
     {
         try {
-            $activitiesRequest = new ActivitiesRequest();
-            $activitiesRequest->populateFromArray($request->toArray());
+            $activitiesRequest = new ActivitySearch();
+            $activitiesRequest->fill($request->toArray());
+
+            // $activitiesRequest = new ActivitiesRequest();
+            // $activitiesRequest->populateFromArray($request->toArray());
             $activities = ActivitiesRepository::getStoredActivitiesList($activitiesRequest);
 
             return Response::json($activities);
-        } catch (Throwable) {
-            return $this->wrongRequestResponse();
+        } catch (Throwable $exception) {
+            return $this->wrongRequestResponse($exception);
         }
     }
 

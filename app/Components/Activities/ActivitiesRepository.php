@@ -4,6 +4,7 @@ namespace App\Components\Activities;
 
 use App\Components\RemoteStorage\RemoteStorageInterface;
 use App\Models\Activity;
+use App\Models\ActivitySearch;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -35,11 +36,11 @@ class ActivitiesRepository
         return $activity;
     }
 
-    public static function getStoredActivitiesList(ActivitiesRequest $activitiesRequest): LengthAwarePaginator
+    public static function getStoredActivitiesList(ActivitySearch $activitySearch): LengthAwarePaginator
     {
         return Activity::query()
-            ->where(Activity::getWhereConditions($activitiesRequest->asArray()))
-            ->paginate($activitiesRequest->onPage());
+            ->where($activitySearch->toArray())
+            ->paginate($activitySearch->getAttribute('onPage'));
     }
 
     public static function getStoredCount(): int

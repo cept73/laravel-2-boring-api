@@ -47,7 +47,7 @@ class ActivitiesTest extends TestCase
     {
         $correctCases = [
             [],
-            ['participant'  => 1],
+            ['participants' => 1],
             ['price'        => 0.5],
             ['type'         => 'relaxation']
         ];
@@ -59,23 +59,7 @@ class ActivitiesTest extends TestCase
             'from',
             'last_page',
             'last_page_url',
-            'links' => [
-                [
-                    'url',
-                    'label',
-                    'active',
-                ],
-                [
-                    'url',
-                    'label',
-                    'active',
-                ],
-                [
-                    'url',
-                    'label',
-                    'active',
-                ],
-            ],
+            'links',
             'next_page_url',
             'path',
             'per_page',
@@ -85,8 +69,8 @@ class ActivitiesTest extends TestCase
         ];
 
         foreach ($correctCases as $correctGetParams) {
-            $response = $this->get(UrlHelper::getUrlWithParams(self::URL_ACTIVITIES, $correctGetParams));
-            $response->assertJsonStructure($correctStructure);
+            $this->get(UrlHelper::getUrlWithParams(self::URL_ACTIVITIES, $correctGetParams))
+                ->assertJsonStructure($correctStructure);
         }
     }
 

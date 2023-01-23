@@ -13,19 +13,9 @@ abstract class Controller extends BaseController
     public const MESSAGE_ITEM_NOT_FOUND = 'Item not found';
     public const MESSAGE_WRONG_REQUEST  = 'Wrong request';
 
-    protected function itemNotFoundResponse(): JsonResponse
+    protected function wrongRequestResponse(Throwable $exception): JsonResponse
     {
-        return $this->jsonResponse(self::MESSAGE_ITEM_NOT_FOUND, HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    protected function wrongRequestResponse(): JsonResponse
-    {
-        return $this->jsonResponse(self::MESSAGE_WRONG_REQUEST, HttpResponse::HTTP_BAD_REQUEST);
-    }
-
-    protected function serverErrorResponse(Throwable $exception): JsonResponse
-    {
-        return $this->jsonResponse($exception->getMessage(), HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->jsonResponse(self::MESSAGE_WRONG_REQUEST . ': ' . $exception->getMessage(), HttpResponse::HTTP_BAD_REQUEST);
     }
 
     protected function jsonResponse($message, $code): JsonResponse
