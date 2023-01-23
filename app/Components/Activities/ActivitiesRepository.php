@@ -6,24 +6,12 @@ use App\Components\RemoteStorage\RemoteStorageInterface;
 use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class ActivitiesRepository
 {
     public static function getStoredActivity(?int $key): ?Activity
     {
         return Activity::query()->where(['key' => $key])->get()->first();
-    }
-
-    public static function getStoredActivityOrFail(?int $key): Activity
-    {
-        $activity = self::getStoredActivity($key);
-
-        if (empty($activity)) {
-            throw new NotFoundResourceException();
-        }
-
-        return $activity;
     }
 
     /**
