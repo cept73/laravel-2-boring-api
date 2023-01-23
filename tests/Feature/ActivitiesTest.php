@@ -34,10 +34,12 @@ class ActivitiesTest extends TestCase
 
     public function test_get_activities_incorrect_query()
     {
+        $someIncorrectData = 'incorrect_data';
+
         $response = $this->get(UrlHelper::getUrlWithParams(self::URL_ACTIVITIES, [
-            'participant'   => 'incorrect_data',
-            'price'         => 'incorrect_data',
-            'type'          => 'incorrect_data'
+            'participant'   => $someIncorrectData,
+            'price'         => $someIncorrectData,
+            'type'          => $someIncorrectData
         ]));
 
         $response->assertStatus(HttpResponse::HTTP_BAD_REQUEST);
