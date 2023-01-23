@@ -13,7 +13,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Throwable;
 
@@ -54,7 +53,7 @@ class ActivitiesController extends Controller
 
             return Response::json($activities);
         } catch (Throwable) {
-            return Response::json(['message' => self::MESSAGE_WRONG_REQUEST], HttpResponse::HTTP_BAD_REQUEST);
+            return $this->wrongRequest();
         }
     }
 
@@ -97,15 +96,5 @@ class ActivitiesController extends Controller
         catch (Throwable $exception) {
             return $this->serverError($exception);
         }
-    }
-
-    private function itemNotFoundResponse(): JsonResponse
-    {
-        return Response::json(['message' => self::MESSAGE_ITEM_NOT_FOUND], HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    private function serverError(Throwable $exception): JsonResponse
-    {
-        return Response::json(['message' => $exception->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
